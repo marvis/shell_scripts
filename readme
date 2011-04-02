@@ -1,0 +1,16 @@
+this folder will store all the shell scrips I have write before
+
+Some of my previous scripts can refer to 
+a. http://www.picb.ac.cn/~xiaohang/research/tools/shell/my_innovation.html
+b. mymac/Local/CrossPlatform/bin/*
+
+Previous Scripts:
+1. lyric
+a. lyric_editor , one parameter, the file contains non labeled lyric
+b. lrcplayer *.mp3 , will check lrc folder in current folder, if exit lyric file with the same name to mp3 file, then lyric will be display
+d. get_lyric , search and download lyric from baidu
+
+2. srt
+a. srt_check test.srt  , will get all the unknow words from test.srt
+b. srt_refresh test.srt > out.srt, will put unknow words' explain to srt and output the final srt to out.srt
+ps: currently srt_refresh have some bugs
