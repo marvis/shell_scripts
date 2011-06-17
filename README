@@ -18,11 +18,17 @@ usage : ./create_dialog.sh dialog_template
 the first usage will create v3d dialog class from a template file with simple dialog description
 the second usage will produce a demo dialog template file
 
-4. shell_usage.sh
+4. create_cpp_main.sh
+
+usage : create_cpp_main.sh
+
+create a test cpp file with only main() function
+
+5. shell_usage.sh
 
 usage : shell_usage.sh <command>
 
-currently supported commands : if case for until while array string trap
+It will display the usage of many shell commands. Currently supported commands : if case for until while array string trap
 
 
 
