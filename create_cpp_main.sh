@@ -1,0 +1,8 @@
+echo "#include <iostream>"
+echo "using namespace std;"
+echo ""
+echo "int main(int argc, char* argv[])"
+echo "{"
+echo -e "\tcout<<\"Hello World\"<<endl;"
+echo -e "\treturn 0;"
+echo "}"
