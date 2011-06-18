@@ -1,3 +1,4 @@
+                                 README
 
 1. create_code_v3d_plugin.sh
 
@@ -30,7 +31,11 @@ usage : shell_usage.sh <command>
 
 It will display the usage of many shell commands. Currently supported commands : if case for until while array string trap
 
+6. getcode.sh
 
+usage : getcode.sh <code_name> [options]
+
+It will invoke "create_code_code_name.sh [options]"
 
 
 
