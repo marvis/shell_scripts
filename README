@@ -37,7 +37,11 @@ usage : getcode.sh <code_name> [options]
 
 It will invoke "create_code_code_name.sh [options]"
 
+7. to_echo_code.sh
 
+usage : to_echo_code.sh <file_name>
+
+It will produce the shell code that will echo the content of file_name
 
 
 
