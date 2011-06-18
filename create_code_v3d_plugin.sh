@@ -2,7 +2,7 @@ template_file=$1
 
 if [[ ! -e "$template_file" &&  "$template_file" != "!" ]]
 then
-	echo "usage : create_plugin.sh <template file>"
+	echo "usage : create_code_v3d_plugin.sh <template file>"
 	echo ""
 	echo "============ Demo Template File ==========="
 	echo "TITLE=\"Test Plugin\""
@@ -45,6 +45,8 @@ done < $template_file
 
 PLUGIN_HEADER="${PLUGIN_NAME}_plugin.h"
 PLUGIN_CPP="${PLUGIN_NAME}_plugin.cpp"
+FUNC_HEADER="${PLUGIN_NAME}_func.h"
+FUNC_CPP="${PLUGIN_NAME}_func.cpp"
 PRO_FILE="${PLUGIN_NAME}.pro"
 
 echo "create $PLUGIN_HEADER ..."
@@ -77,13 +79,6 @@ then
 	echo -e "\t{return false;}"
 	echo "};"
 	echo ""
-	i=0
-	while [ $i -lt ${#FUNCS[@]} ]
-	do
-		echo "int ${FUNCS[$i]}(V3DPluginCallback2 &callback, QWidget *parent);"
-		i=$[i+1]
-	done
-	echo ""
 	echo "#endif"
 	echo ""
 fi > $PLUGIN_HEADER
@@ -96,11 +91,9 @@ then
 	echo " * $PLUGIN_DATE : by $PLUGIN_AUTHOR"
 	echo " */"
 	echo " "
-	echo "#include <v3d_interface.h>"
-	echo "#include \"v3d_message.h\""
 	echo "#include \"$PLUGIN_HEADER\""
-	if [ ! -z "$PLUGIN_GUI" ]; then echo "#include \"$PLUGIN_GUI\""; fi
-	echo ""
+	echo "#include \"$FUNC_HEADER\""
+	echo " "
 	echo "Q_EXPORT_PLUGIN2($PLUGIN_NAME, $PLUGIN_CLASS);"
 	echo " "
 	echo "const QString title = QObject::tr(\"$TITLE\");"
@@ -133,6 +126,45 @@ then
 	done
 	echo "}"
 	echo ""
+fi > $PLUGIN_CPP
+
+echo "create $FUNC_HEADER ..."
+if [ "1" ]
+then
+	echo "/* $FUNC_HEADER"
+	echo " * $PLUGIN_DESCRIPTION"
+	echo " * $PLUGIN_DATE : by $PLUGIN_AUTHOR"
+	echo " */"
+	echo " "
+	echo "#ifndef __`echo ${PLUGIN_NAME} | tr "[:lower:]" "[:upper:]"`_FUNC_H__"
+	echo "#define __`echo ${PLUGIN_NAME} | tr "[:lower:]" "[:upper:]"`_FUNC_H__"
+	echo ""
+	echo "#include <v3d_interface.h>"
+	echo ""
+	i=0
+	while [ $i -lt ${#FUNCS[@]} ]
+	do
+		echo "int ${FUNCS[$i]}(V3DPluginCallback2 &callback, QWidget *parent);"
+		i=$[i+1]
+	done
+	echo ""
+	echo "#endif"
+	echo ""
+fi > $FUNC_HEADER
+
+echo "create $FUNC_CPP ..."
+if [ "1" ]
+then
+	echo "/* $FUNC_CPP"
+	echo " * $PLUGIN_DESCRIPTION"
+	echo " * $PLUGIN_DATE : by $PLUGIN_AUTHOR"
+	echo " */"
+	echo ""
+	echo "#include <v3d_interface.h>"
+	echo "#include \"v3d_message.h\""
+	echo "#include \"$FUNC_HEADER\""
+	if [ ! -z "$PLUGIN_GUI" ]; then echo "#include \"$PLUGIN_GUI\""; fi
+	echo ""
 	i=0
 	while [ $i -lt ${#FUNCS[@]} ]
 	do
@@ -144,7 +176,7 @@ then
 		i=$[i+1]
 	done
 	echo ""
-fi > $PLUGIN_CPP
+fi >> $FUNC_CPP
 
 echo "create $PRO_FILE ..."
 if [ "1" ]
@@ -156,9 +188,11 @@ then
 	echo -e "INCLUDEPATH\t+= $V3D_MAIN_PATH/basic_c_fun"
 	echo ""
 	echo -e "HEADERS\t= $PLUGIN_HEADER"
+	echo -e "HEADERS\t+= $FUNC_HEADER"
 	if [ ! -z "$PLUGIN_GUI" ] ; then echo -e "HEADERS\t+= $PLUGIN_GUI"; fi
 	echo ""
 	echo -e "SOURCES\t= $PLUGIN_CPP"
+	echo -e "SOURCES\t+= $FUNC_CPP"
 	echo -e "SOURCES\t+= $V3D_MAIN_PATH/basic_c_fun/v3d_message.cpp"
 	echo ""
 	echo -e "TARGET\t= \$\$qtLibraryTarget($PLUGIN_NAME)"

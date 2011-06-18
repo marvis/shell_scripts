@@ -1,26 +1,26 @@
 
-1. create_plugin.sh
+1. create_code_v3d_plugin.sh
 
-usage : ./create_plugin.sh plugin_template
-        ./create_plugin.sh !
+usage : ./create_code_v3d_plugin.sh plugin_template
+        ./create_code_v3d_plugin.sh !
 
 the first usage will create v3d plugin project from a template file with simple parameters
 the second usage will produce a demo template file
 
-2. create_plugin2.sh
+2. create_code_v3d_plugin2.sh
 The same usage as create_plugin.sh, but xxx_func.h/cpp will not be produced
 
-3. create_dialog.sh
+3. create_code_v3d_dialog.sh
 
-usage : ./create_dialog.sh dialog_template
-		./create_dialog.sh !
+usage : ./create_code_v3d_dialog.sh dialog_template
+		./create_code_v3d_dialog.sh !
 
 the first usage will create v3d dialog class from a template file with simple dialog description
 the second usage will produce a demo dialog template file
 
-4. create_cpp_main.sh
+4. create_code_cpp_main.sh
 
-usage : create_cpp_main.sh
+usage : create_code_cpp_main.sh
 
 create a test cpp file with only main() function
 
@@ -29,9 +29,6 @@ create a test cpp file with only main() function
 usage : shell_usage.sh <command>
 
 It will display the usage of many shell commands. Currently supported commands : if case for until while array string trap
-
-
-
 
 
 
