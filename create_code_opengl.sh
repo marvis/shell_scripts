@@ -1,25 +1,12 @@
 #! /bin/sh
 
-if [ "$#" = "0" ]; then
+if [[ "$#" = "0" || "$1" = "!" ]]; then
 	echo "usage : create_code_opengl.sh <code_name> [option] <os_type>"
-	echo "Use \"create_code_opengl.sh !\" to display the detailed information."
-	exit 0
-fi
-
-if [ "$1" = "!" ]; then
-	echo "code_name : smoke nehe qt"
-	echo "os_type   : macos linux"
 	echo ""
-	echo "nehe includes many opengl course, the option is the lesson's number."
-	if [ "1" ] ; then
-		echo "01 #   An OpenGL Window"
-		echo "02 #   First Polygon"
-		echo "03 #   Adding Color"
-		echo "04 #   Rotation"
-		echo "05 #   3D Shapes"
-		echo "06 #   Texture Mapping"
-		echo "07 #   Texture Filters, Lighting & Keyboard Control"
-	fi | column -t -s \#
+	echo -e "The command will produce opengl codes. The os_type is macos or linux. If omited, it will be current os type."
+	echo ""
+	echo -e "Available Codes : smoke nehe qt"
+	echo ""
 	exit 0
 fi
 
@@ -40,6 +27,7 @@ fi
 
 if [ "$1" = "nehe" ]; then
 	if [[ "$CODE_NAME" = "" || "$CODE_NAME" = "macos" || "$CODE_NAME" = "linux" || "$OS_TYPE" = "" ]]; then
+		echo "Available Codes :"
 		if [ "1" ] ; then
 			echo "01 #   An OpenGL Window"
 			echo "02 #   First Polygon"
@@ -47,10 +35,27 @@ if [ "$1" = "nehe" ]; then
 			echo "04 #   Rotation"
 			echo "05 #   3D Shapes"
 			echo "06 #   Texture Mapping"
-			echo "07 #   Texture Filters, Lighting & Keyboard Control"
 		fi | column -t -s \#
 	else
 		eval "$OPENGL_SCRIPT_PATH/${CODE_TYPE}_${CODE_NAME}_${OS_TYPE}.sh"
 	fi
-elif [ "$1" = "" ]; then :
+elif [ "$1" = "smoke" ]; then
+	if [[ "$CODE_NAME" = "" || "$CODE_NAME" = "macos" || "$CODE_NAME" = "linux" || "$OS_TYPE" = "" ]]; then
+		echo "Available Codes :"
+		if [ "1" ]; then
+			echo "framework #   produce opengl smoke program based on framework"
+			echo "x11 #   produce opengl smoke program based on x11"
+		fi | column -t -s \#
+	else
+		eval "$OPENGL_SCRIPT_PATH/${CODE_TYPE}_${CODE_NAME}_${OS_TYPE}.sh"
+	fi
+elif [ "$1" = "qt" ]; then
+	if [[ "$CODE_NAME" = "" || "$CODE_NAME" = "macos" || "$CODE_NAME" = "linux" || "$OS_TYPE" = "" ]]; then
+		echo "Available Codes :"
+		if [ "1" ]; then
+			echo "smoke #   produce qt smoke program"
+		fi | column -t -s \#
+	else
+		eval "$OPENGL_SCRIPT_PATH/${CODE_TYPE}_${CODE_NAME}_${OS_TYPE}.sh"
+	fi
 fi

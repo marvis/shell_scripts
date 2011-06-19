@@ -1,13 +1,8 @@
 #! /bin/sh
-if [ "$#" -eq "0" ]
+if [[ "$#" -eq "0" || "$1" = "!" ]]
 then
 	echo "usage : getcode.sh <code_name> [option]"
-	echo "Use \"getcode.sh !\" to get the supported code list"
-	exit 0
-fi
-
-if [ "$1" = "!" ] 
-then
+	echo ""
 	echo "Available Codes : v3d_plugin v3d_dialog opengl cpp_main shell_script"
 	echo ""
 	if [ "1" ]; then
