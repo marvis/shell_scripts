@@ -2,7 +2,7 @@ template_file=$1
 
 if [[ ! -e "$template_file" &&  "$template_file" != "!" ]]
 then
-	echo "usage : create_code_v3d_plugin.sh <template file>"
+	echo "usage : create_code_v3d_plugin.sh <template file> [option]"
 	echo ""
 	echo "============ Demo Template File ==========="
 	echo "TITLE=\"Test Plugin\""
@@ -37,6 +37,8 @@ then
 	echo "plugin_template saved"
 	exit 0
 fi
+
+if [ "$2" = "2" ]; then create_code_v3d_plugin2.sh $template_file; exit 0; fi
 
 while read line
 do
