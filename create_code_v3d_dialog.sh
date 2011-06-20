@@ -169,15 +169,21 @@ do
 		then
 			STAT="D"
 		fi
-		BUTTON_TYPE=`echo $line | awk '{print $2}'`
-		BUTTON_NAME=`echo $line | awk '{print $3}'`
-		PARAMETER=`echo $line | awk -F\" '{print $2}'`
+		DEF=`echo $line | awk -F\| '{print $1}'`
+		BUTTON_TYPE=`echo $DEF | awk '{print $2}'`
+		BUTTON_NAME=`echo $DEF | awk '{print $3}'`
+		PARAMETER=`echo $DEF | awk -F\" '{print $2}'`
+		COMMANDS=`echo $line | awk -F\| '{print $2}'`
 		if [ -z "$PARAMETER" ]
 		then
 			echo -e "\t\t$BUTTON_NAME = new $BUTTON_TYPE();"
 		else
 			echo -e "\t\t$BUTTON_NAME = new $BUTTON_TYPE(tr(\"$PARAMETER\"));"
 		fi
+		for cmd in $COMMANDS
+		do
+			echo -e "\t\t$BUTTON_NAME->$cmd;"
+		done
 		if [ "$BUTTON_TYPE" = "QGridLayout" ]
 		then
 			LAYOUT=$BUTTON_NAME

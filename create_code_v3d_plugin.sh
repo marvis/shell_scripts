@@ -13,10 +13,11 @@ then
 	echo "PLUGIN_AUTHOR=\"Hang Xiao\""
 	echo "#PLUGIN_GUI=\"test_gui.h\""
 	echo "V3D_MAIN_PATH=\"../../work/v3d_external/v3d_main\""
-
+	echo ""
 	echo "MENUS=(\"compute average\" \"partial alignment\" \"about\")"
 	echo "FUNCS=(\"compute_average\" \"partial_alignment\" \"myabout\")"
 	echo ""
+	echo "#DOFUNC=\"yes\""
 	exit 1
 elif [ "$template_file" = "!" ]
 then
@@ -33,6 +34,8 @@ then
 		echo ""
 		echo "MENUS=(\"compute average\" \"partial alignment\" \"about\")"
 		echo "FUNCS=(\"compute_average\" \"partial_alignment\" \"myabout\")"
+		echo ""
+		echo "#DOFUNC=\"yes\""
 	fi > plugin_template
 	echo "plugin_template saved"
 	exit 0
@@ -76,9 +79,14 @@ then
 	echo -e "\tQStringList menulist() const;"
 	echo -e "\tvoid domenu(const QString &menu_name, V3DPluginCallback2 &callback, QWidget *parent);"
 	echo ""
-	echo -e "\tQStringList funclist() const {return QStringList();}"
-	echo -e "\tbool dofunc(const QString &func_name, const V3DPluginArgList &input, V3DPluginArgList &output, V3DPluginCallback2 &callback, QWidget *parent)"
-	echo -e "\t{return false;}"
+	if [ "$DOFUNC" != "yes" ]; then
+		echo -e "\tQStringList funclist() const {return QStringList();}"
+		echo -e "\tbool dofunc(const QString &func_name, const V3DPluginArgList &input, V3DPluginArgList &output, V3DPluginCallback2 &callback, QWidget *parent)"
+		echo -e "\t{return false;}"
+	else 
+		echo -e "\tQStringList funclist() const ;" 
+		echo -e "\tbool dofunc(const QString &func_name, const V3DPluginArgList &input, V3DPluginArgList &output, V3DPluginCallback2 &callback, QWidget *parent);"
+	fi
 	echo "};"
 	echo ""
 	echo "#endif"
@@ -98,7 +106,6 @@ then
 	echo " "
 	echo "Q_EXPORT_PLUGIN2($PLUGIN_NAME, $PLUGIN_CLASS);"
 	echo " "
-	echo "const QString title = QObject::tr(\"$TITLE\");"
 	echo "QStringList $PLUGIN_CLASS::menulist() const"
 	echo "{"
 	echo -ne "\treturn QStringList()"
@@ -111,6 +118,20 @@ then
 	echo ";"
 	echo "}"
 	echo ""
+	if [ "$DOFUNC" = "yes" ]; then
+		echo "QStringList $PLUGIN_CLASS::funclist() const"
+		echo "{"
+		echo -ne "\treturn QStringList()"
+		i=0
+		while [ $[i+1] -lt ${#FUNCS[@]} ]
+		do
+			echo -ne "\n\t\t<<tr(\"${FUNCS[$i]}\")"
+			i=$[i+1]
+		done
+		echo ";"
+		echo "}"
+		echo ""
+	fi
 	echo "void $PLUGIN_CLASS::domenu(const QString &menu_name, V3DPluginCallback2 &callback, QWidget *parent)"
 	echo "{"
 	echo -e "\tif (menu_name == tr(\"${MENUS[0]}\"))"
@@ -128,6 +149,25 @@ then
 	done
 	echo "}"
 	echo ""
+	if [ "$DOFUNC" = "yes" ]; then
+		echo "bool $PLUGIN_CLASS::dofunc(const QString & func_name, const V3DPluginArgList & input, V3DPluginArgList & output, V3DPluginCallback2 & callback,  QWidget * parent)"
+		echo "{"
+		echo -e "\tif (func_name == tr(\"${FUNCS[0]}\"))"
+		echo -e "\t{"
+		echo -e "\t\treturn ${FUNCS[0]}(input, output);"
+		echo -e "\t}"
+		i=1
+		while [ $[i+1] -lt ${#FUNCS[@]} ]
+		do
+			echo -e "\telse if (func_name == tr(\"${FUNCS[$i]}\"))"
+			echo -e "\t{"
+			echo -e "\t\treturn ${FUNCS[$i]}(input,output);"
+			echo -e "\t}"
+			i=$[i+1]
+		done
+		echo "}"
+		echo ""
+	fi
 fi > $PLUGIN_CPP
 
 echo "create $FUNC_HEADER ..."
@@ -147,6 +187,9 @@ then
 	while [ $i -lt ${#FUNCS[@]} ]
 	do
 		echo "int ${FUNCS[$i]}(V3DPluginCallback2 &callback, QWidget *parent);"
+		if [[ $[i+1] -lt  ${#FUNCS[@]} && "$DOFUNC" = "yes" ]]; then
+			echo "bool ${FUNCS[$i]}(const V3DPluginArgList & input, V3DPluginArgList & output);"
+		fi
 		i=$[i+1]
 	done
 	echo ""
@@ -167,6 +210,7 @@ then
 	echo "#include \"$FUNC_HEADER\""
 	if [ ! -z "$PLUGIN_GUI" ]; then echo "#include \"$PLUGIN_GUI\""; fi
 	echo ""
+	echo "const QString title = QObject::tr(\"$TITLE\");"
 	i=0
 	while [ $i -lt ${#FUNCS[@]} ]
 	do
@@ -175,6 +219,13 @@ then
 		echo -e "\tv3d_msg(\"${FUNCS[$i]}\");"
 		echo -e "\treturn 1;"
 		echo "}"
+		echo ""
+		if [[ $[i+1] -lt  ${#FUNCS[@]} && "$DOFUNC" = "yes" ]]; then
+			echo "bool ${FUNCS[$i]}(const V3DPluginArgList & input, V3DPluginArgList & output)"
+			echo "{"
+			echo "}"
+			echo ""
+		fi
 		i=$[i+1]
 	done
 	echo ""
