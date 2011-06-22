@@ -14,8 +14,8 @@ then
 	echo "#PLUGIN_GUI=\"test_gui.h\""
 	echo "V3D_MAIN_PATH=\"../../work/v3d_external/v3d_main\""
 	echo ""
-	echo "MENUS=(\"compute average\" \"partial alignment\" \"about\")"
-	echo "FUNCS=(\"compute_average\" \"partial_alignment\" \"myabout\")"
+	echo "MENUS=(\"compute average\" \"partial alignment\")"
+	echo "FUNCS=(\"compute_average\" \"partial_alignment\")"
 	echo ""
 	echo "#DOFUNC=\"yes\""
 	exit 1
@@ -32,8 +32,8 @@ then
 		echo "#PLUGIN_GUI=\"test_gui.h\""
 		echo "V3D_MAIN_PATH=\"../../../v3d_main\""
 		echo ""
-		echo "MENUS=(\"compute average\" \"partial alignment\" \"about\")"
-		echo "FUNCS=(\"compute_average\" \"partial_alignment\" \"myabout\")"
+		echo "MENUS=(\"compute average\" \"partial alignment\")"
+		echo "FUNCS=(\"compute_average\" \"partial_alignment\")"
 		echo ""
 		echo "#DOFUNC=\"yes\""
 	fi > plugin_template
@@ -101,6 +101,8 @@ then
 	echo " * $PLUGIN_DATE : by $PLUGIN_AUTHOR"
 	echo " */"
 	echo " "
+	echo "#include \"v3d_message.h\""
+	echo ""
 	echo "#include \"$PLUGIN_HEADER\""
 	echo "#include \"$FUNC_HEADER\""
 	echo " "
@@ -115,7 +117,7 @@ then
 		echo -ne "\n\t\t<<tr(\"${MENUS[$i]}\")"
 		i=$[i+1]
 	done
-	echo ";"
+	echo -e "\n\t\t<<tr(\"about\");"
 	echo "}"
 	echo ""
 	if [ "$DOFUNC" = "yes" ]; then
@@ -123,7 +125,7 @@ then
 		echo "{"
 		echo -ne "\treturn QStringList()"
 		i=0
-		while [ $[i+1] -lt ${#FUNCS[@]} ]
+		while [ $i -lt ${#FUNCS[@]} ]
 		do
 			echo -ne "\n\t\t<<tr(\"${FUNCS[$i]}\")"
 			i=$[i+1]
@@ -147,6 +149,10 @@ then
 		echo -e "\t}"
 		i=$[i+1]
 	done
+	echo -e "\telse"
+	echo -e "\t{"
+	echo -e "\t\tv3d_msg(tr(\"$PLUGIN_DESCRIPTION. \"\n\t\t\t\"Developed by $PLUGIN_AUTHOR, $PLUGIN_DATE\"));"
+	echo -e "\t}"
 	echo "}"
 	echo ""
 	if [ "$DOFUNC" = "yes" ]; then
@@ -157,7 +163,7 @@ then
 		echo -e "\t\treturn ${FUNCS[0]}(input, output);"
 		echo -e "\t}"
 		i=1
-		while [ $[i+1] -lt ${#FUNCS[@]} ]
+		while [ $i -lt ${#FUNCS[@]} ]
 		do
 			echo -e "\telse if (func_name == tr(\"${FUNCS[$i]}\"))"
 			echo -e "\t{"
@@ -187,7 +193,7 @@ then
 	while [ $i -lt ${#FUNCS[@]} ]
 	do
 		echo "int ${FUNCS[$i]}(V3DPluginCallback2 &callback, QWidget *parent);"
-		if [[ $[i+1] -lt  ${#FUNCS[@]} && "$DOFUNC" = "yes" ]]; then
+		if [[ $i -lt  ${#FUNCS[@]} && "$DOFUNC" = "yes" ]]; then
 			echo "bool ${FUNCS[$i]}(const V3DPluginArgList & input, V3DPluginArgList & output);"
 		fi
 		i=$[i+1]
@@ -216,11 +222,48 @@ then
 	do
 		echo "int ${FUNCS[$i]}(V3DPluginCallback2 &callback, QWidget *parent)"
 		echo "{"
-		echo -e "\tv3d_msg(\"${FUNCS[$i]}\");"
+		if [ "$i" = "0" ]; then
+			echo -e "\tv3dhandleList win_list = callback.getImageWindowList();"
+			echo ""
+			echo -e "\tif(win_list.size()<1)"
+			echo -e "\t{"
+			echo -e "\t\tQMessageBox::information(0, title, QObject::tr(\"No image is open.\"));"
+			echo -e "\t\treturn -1;"
+			echo -e "\t}"
+			echo -e "\t//TestDialog dialog(callback, parent);"
+			echo ""
+			echo -e "\t//if (dialog.exec()!=QDialog::Accepted) return -1;"
+			echo ""
+			echo -e "\t//dialog.update();"
+			echo -e "\t//int i = dialog.i;"
+			echo -e "\t//int c = dialog.channel;"
+			echo -e "\t//Image4DSimple *p4DImage = callback.getImage(win_list[i]);"
+
+			echo -e "\t//if(p4DImage->getCDim() <= c) {v3d_msg(QObject::tr(\"The channel isn't existed.\")); return -1;}"
+			echo -e "\t//V3DLONG sz[3];"
+			echo -e "\t//sz[0] = p4DImage->getXDim();"
+			echo -e "\t//sz[1] = p4DImage->getYDim();"
+			echo -e "\t//sz[2] = p4DImage->getZDim();"
+			echo ""
+			echo -e "\t//unsigned char * inimg1d = p4DImage->getRawDataAtChannel(c);"
+			echo -e ""
+			echo -e "\t//v3dhandle newwin;"
+			echo -e "\t//if(QMessageBox::Yes == QMessageBox::question(0, \"\", QString(\"Do you want to use the existing windows?\"), QMessageBox::Yes, QMessageBox::No))"
+			echo -e "\t\t//newwin = callback.currentImageWindow();"
+			echo -e "\t//else"
+			echo -e "\t\t//newwin = callback.newImageWindow();"
+			echo ""
+			echo -e "\t//p4DImage->setData(inimg1d, sz[0], sz[1], sz[2], sz[3]);"
+			echo -e "\t//callback.setImage(newwin, p4DImage);"
+			echo -e "\t//callback.setImageName(newwin, QObject::tr(\"${FUNCS[$i]}\"));"
+			echo -e "\t//callback.updateImageWindow(newwin);"
+		else
+			echo -e "\tv3d_msg(\"${FUNCS[$i]}\");"
+		fi
 		echo -e "\treturn 1;"
 		echo "}"
 		echo ""
-		if [[ $[i+1] -lt  ${#FUNCS[@]} && "$DOFUNC" = "yes" ]]; then
+		if [[ $i -lt  ${#FUNCS[@]} && "$DOFUNC" = "yes" ]]; then
 			echo "bool ${FUNCS[$i]}(const V3DPluginArgList & input, V3DPluginArgList & output)"
 			echo "{"
 			echo "}"
@@ -250,6 +293,6 @@ then
 	echo ""
 	echo -e "TARGET\t= \$\$qtLibraryTarget($PLUGIN_NAME)"
 	echo -e "DESTDIR\t= ~/Applications/v3d/plugins/$PLUGIN_NAME/"
-fi > $PRO_FILE
+fi >> $PRO_FILE
 
 echo "done"

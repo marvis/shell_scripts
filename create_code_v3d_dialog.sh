@@ -94,8 +94,10 @@ DIALOG_TEMPLATE=$1
 
 CLASS_NAME=""
 LAYOUT=""
-DEFINITIONS=""
 STAT=""
+DEFINITIONS=""
+UPDATE_DEFS=""
+UPDATE_CODES=""
 
 echo "#ifndef __`echo $DIALOG_TEMPLATE | tr [:lower:] [:upper:] `_H__"
 echo "#define __`echo $DIALOG_TEMPLATE | tr [:lower:] [:upper:] `_H__"
@@ -112,6 +114,10 @@ do
 		if [ "$STAT" = "D" ]
 		then
 			DEFINITIONS="${DEFINITIONS}\n"
+		elif [ "$STAT" = "U" ]
+		then
+			UPDATE_DEFS="${UPDATE_DEFS}\n"
+			UPDATE_CODES="${UPDATE_CODES}\n"
 		fi
 		continue
 	fi
@@ -140,9 +146,11 @@ do
 			echo "public slots:"
 			echo -e "\tvoid update()"
 			echo -e "\t{"
+			echo -e "$UPDATE_CODES"
 			echo -e "\t}"
 			echo ""
 			echo "public:"
+			echo -ne "$UPDATE_DEFS"
 			echo -ne "$DEFINITIONS"
 			echo "};"
 			echo ""
@@ -151,6 +159,8 @@ do
 			CLASS_NAME=`echo $line | awk '{print $2}'`
 			LAYOUT=""
 			DEFINITIONS=""
+			UPDATE_DEFS=""
+			UPDATE_CODES=""
 			STAT=""
 			echo "class $CLASS_NAME : public QDialog"
 			echo "{"
@@ -223,6 +233,13 @@ do
 		SLT_NAM=`echo $line | awk '{print $4}'`
 		SLT_ACT=`echo $line | awk '{print $5}'`
 		echo -e "\t\tconnect($SIG_NAM, SIGNAL($SIG_ACT), $SLT_NAM, SLOT($SLT_ACT));"
+	elif [ "$TYPE" = "U" ]
+	then
+		VAR_TYPE=`echo $line | awk '{print $2}'`
+		VAR_NAME=`echo $line | awk '{print $3}'`
+		VAR_VALUE=`echo $line | awk -F\| '{print $2}'`
+		UPDATE_DEFS="${UPDATE_DEFS}\t$VAR_TYPE $VAR_NAME;\n"
+		UPDATE_CODES="${UPDATE_CODES}\t\t$VAR_NAME = $VAR_VALUE;\n"
 	fi
 done < $DIALOG_TEMPLATE
 
@@ -233,9 +250,11 @@ echo ""
 echo "public slots:"
 echo -e "\tvoid update()"
 echo -e "\t{"
+echo -e "$UPDATE_CODES"
 echo -e "\t}"
 echo ""
 echo "public:"
+echo -ne "$UPDATE_DEFS"
 echo -ne "$DEFINITIONS"
 echo "};"
 echo ""
