@@ -1,47 +1,19 @@
 template_file=$1
 
+TEMPLATE_PATH=`which getcode.sh`
+TEMPLATE_PATH="`dirname $TEMPLATE_PATH`/template"
 if [[ ! -e "$template_file" &&  "$template_file" != "!" ]]
 then
-	echo "usage : create_code_v3d_plugin.sh <template file> [option]"
+	echo "usage : create_code_v3d_plugin.sh <template file>"
 	echo ""
 	echo "============ Demo Template File ==========="
-	echo "TITLE=\"Test Plugin\""
-	echo "PLUGIN_NAME=\"test\""
-	echo "PLUGIN_CLASS=\"TestPlugin\""
-	echo "PLUGIN_DESCRIPTION=\"This is a test plugin\""
-	echo "PLUGIN_DATE=\"2011-06-16\""
-	echo "PLUGIN_AUTHOR=\"Hang Xiao\""
-	echo "#PLUGIN_GUI=\"test_gui.h\""
-	echo "V3D_MAIN_PATH=\"../../work/v3d_external/v3d_main\""
-	echo ""
-	echo "MENUS=(\"compute average\" \"partial alignment\")"
-	echo "FUNCS=(\"compute_average\" \"partial_alignment\")"
-	echo ""
-	echo "#DOFUNC=\"yes\""
+	eval "$TEMPLATE_PATH/v3d_plugin_template_display.sh"
 	exit 1
 elif [ "$template_file" = "!" ]
 then
-	if [ "1" ]
-	then
-		echo "TITLE=\"Test Plugin\""
-		echo "PLUGIN_NAME=\"test\""
-		echo "PLUGIN_CLASS=\"TestPlugin\""
-		echo "PLUGIN_DESCRIPTION=\"This is a test plugin\""
-		echo "PLUGIN_DATE=\"2011-06-16\""
-		echo "PLUGIN_AUTHOR=\"Hang Xiao\""
-		echo "#PLUGIN_GUI=\"test_gui.h\""
-		echo "V3D_MAIN_PATH=\"../../../v3d_main\""
-		echo ""
-		echo "MENUS=(\"compute average\" \"partial alignment\")"
-		echo "FUNCS=(\"compute_average\" \"partial_alignment\")"
-		echo ""
-		echo "#DOFUNC=\"yes\""
-	fi > plugin_template
-	echo "plugin_template saved"
+	eval "$TEMPLATE_PATH/v3d_plugin_template_create.sh"
 	exit 0
 fi
-
-if [ "$2" = "2" ]; then create_code_v3d_plugin2.sh $template_file; exit 0; fi
 
 while read line
 do
