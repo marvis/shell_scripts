@@ -1,12 +1,8 @@
 #! /bin/sh
 
-if [ "$#" = "0" ]; then
+if [[ "$#" = "0" || "$1" = "!" ]]; then
 	echo "usage : create_code_shell_script.sh <code name>"
-	echo "use ! to display detailed information"
-	exit 0;
-fi
-
-if [ "$1" = "!" ]; then
+	echo ""
 	echo "Available Codes : dayofweek"
 	echo ""
 	if [ "1" ]; then
