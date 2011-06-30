@@ -57,7 +57,7 @@ do
 			echo -e "\tQ_OBJECT"
 			echo ""
 			echo "public:"
-			echo -e "\t$CLASS_NAME(V3DPluginCallback &callback, QWidget * parent)"
+			echo -e "\t$CLASS_NAME(V3DPluginCallback2 &callback, QWidget * parent)"
 			echo -e "\t{"
 			echo -e "\t\tv3dhandleList win_list = callback.getImageWindowList();"
 			echo -e "\t\tQStringList items;"
