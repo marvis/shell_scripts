@@ -186,9 +186,49 @@ then
 	echo "#include <v3d_interface.h>"
 	echo "#include \"v3d_message.h\""
 	echo "#include \"$FUNC_HEADER\""
+	if [ "$DOFUNC" = "yes" ]; then
+		echo "#include <vector>"
+		echo "#include <iostream>"
+		echo "using namespace std;"
+	fi
 	if [ ! -z "$PLUGIN_GUI" ]; then echo "#include \"$PLUGIN_GUI\""; fi
 	echo ""
 	echo "const QString title = QObject::tr(\"$TITLE\");"
+	echo ""
+	if [ "$DOFUNC" = "yes" ]; then	
+		echo 'int split(const char *paras, char ** &args)'
+		echo '{'
+		echo '    int argc = 0;'
+		echo '    int len = strlen(paras);'
+		echo '    int posb[200];'
+		echo '    char * myparas = new char[len];'
+		echo '    strcpy(myparas, paras);'
+		echo '    for(int i = 0; i < len; i++)'
+		echo '    {'
+		echo '        if(i==0 && myparas[i] != '"'"' '"'"' && myparas[i] != '"'"'\t'"'"')'
+		echo '        {'
+		echo '            posb[argc++]=i;'
+		echo '        }'
+		echo '        else if((myparas[i-1] == '"'"' '"'"' || myparas[i-1] == '"'"'\t'"'"') &&'
+		echo '                (myparas[i] != '"'"' '"'"' && myparas[i] != '"'"'\t'"'"'))'
+		echo '        {'
+		echo '            posb[argc++] = i;'
+		echo '        }'
+		echo '    }'
+		echo ''
+		echo '    args = new char*[argc];'
+		echo '    for(int i = 0; i < argc; i++)'
+		echo '    {'
+		echo '        args[i] = myparas + posb[i];'
+		echo '    }'
+		echo ''
+		echo '    for(int i = 0; i < len; i++)'
+		echo '    {'
+		echo '        if(myparas[i]=='"'"' '"'"' || myparas[i]=='"'"'\t'"'"')myparas[i]='"'"'\0'"'"';'
+		echo '    }'
+		echo '    return argc;'
+		echo '}'
+	fi
 	i=0
 	while [ $i -lt ${#FUNCS[@]} ]
 	do
@@ -238,6 +278,30 @@ then
 		if [[ $i -lt  ${#FUNCS[@]} && "$DOFUNC" = "yes" ]]; then
 			echo "bool ${FUNCS[$i]}(const V3DPluginArgList & input, V3DPluginArgList & output)"
 			echo "{"
+			echo -e "\tcout<<\"Welcome to ${FUNCS[$i]}\"<<endl;"
+			echo -e "\tif(input.size() != 2 || output.size() != 1) return false;"
+			echo -e "\tchar * paras = 0;"
+			echo -e "\tif(((vector<char*> *)(input.at(1).p))->empty()){paras = new char[1]; paras[0]='\\\0';}"
+			echo -e "\telse paras = (*(vector<char*> *)(input.at(1).p)).at(0);"
+			echo -e "\tcout<<\"paras : \"<<paras<<endl;"
+			echo ""
+			echo -e "\tfor(int i = 0; i < strlen(paras); i++)"
+			echo -e "\t{"
+			echo -e "\t\tif(paras[i] == '#') paras[i] = '-';"
+			echo -e "\t}"
+			echo -e "\tcout<<\"paras : \"<<paras<<endl;"
+			echo ""
+			if [[ "$i" -lt  "${#MAINFUNCS[@]}" && "${MAINFUNCS[$i]}" != "" ]]; then
+				echo -e "\tchar ** argv;"
+				echo -e "\tint argc = split(paras, argv);"
+				echo -e "\tcout<<\"${MAINFUNCS[$i]}(argc, argv)\"<<endl;"
+				echo -e "\t//${MAINFUNCS[$i]}(argc, argv);"
+			fi
+			if [[ "$i" -lt  "${#SYSINVOKES[@]}" && "${SYSINVOKES[$i]}" != "" ]]; then
+				echo -e "\tcout<<string(\"${SYSINVOKES[$i]} \").append(paras).c_str()<<endl;"
+				echo -e "\t//system(string(\"${SYSINVOKES[$i]} \").append(paras).c_str());"
+			fi
+			echo -e "\treturn true;"
 			echo "}"
 			echo ""
 		fi
