@@ -9,6 +9,7 @@ if [[ "$#" = "0" || "$1" = "!" ]]; then
 		if [ "1" ] ; then
 			echo "smoke    #   normal opengl test"
 			echo "qt-smoke #   qt smoke test"
+			echo "qt-smoke2 #   glwidget is embeded into QGroupBox"
 			echo "glwidget #   very simple QGLWidget implementation"
 			echo "nehe01   #   An OpenGL Window"
 			echo "nehe02   #   First Polygon"

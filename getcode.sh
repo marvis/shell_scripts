@@ -3,21 +3,32 @@ if [[ "$#" -eq "0" || "$1" = "!" ]]
 then
 	echo "usage : getcode.sh <code_name> [option]"
 	echo ""
-	echo "Available Codes : v3d_plugin v3d_dialog opengl cpp shell_script"
+	echo "Available Codes : v3d_plugin v3d_dialog opengl hellow_world ..."
 	echo ""
+	echo "cpp source codes :"
 	if [ "1" ]; then
-		echo "v3d_plugin #   produce v3d plugin template and project"
-		echo "v3d_dialog #   produce v3d dialog header invoked by v3d plugin"
-		echo "opengl     #   produce opengl program framework"
-		echo "cpp        #   produce cpp code"
-		echo "shell_script #   produce many useful shell scripts"
+		echo "v3d_plugin [vp]   #   produce v3d plugin project from plugin_template"
+		echo "v3d_dialog [vd]   #   produce v3d dialog header invoked by v3d plugin from dialog_template"
+		echo "v3d_widget [vw]   #   produce v3d widget header invoked by v3d plugin from widget_template"
+		echo "qt_widget  [qw]   #   similar to v3d_widget but doesn't include v3d callback related code"
+		echo "opengl            #   produce opengl program framework"
+		echo "hellow_world      #   produce hello world code"
+		echo "detect_platform   #   a small program used to detect the bit of macos"
+		echo "split_string      #   split function used to convert 1d char pointer to 2d char pointer"
+		echo "getopt            #   produce getopt code from template"
 	fi | column -t -s \#
 	echo ""
-		exit 0
-	fi
+	echo "shell scripts :"
+	if [ "1" ]; then
+		echo "dayofweek    #   get day of week"
+	fi | column -t -s \#
 
-	CODE_NAME=$1
+	echo ""
+	exit 0
+fi
 
-	shift
-	command="create_code_$CODE_NAME.sh $@"
-	eval "$command"
+CODE_NAME=$1
+
+shift
+command="create_code_$CODE_NAME.sh $@"
+eval "$command"
