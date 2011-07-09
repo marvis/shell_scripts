@@ -3,14 +3,19 @@ TEMPLATE_PATH=`which getcode.sh`
 TEMPLATE_PATH="`dirname $TEMPLATE_PATH`/template"
 if [ "$#" = "0" ]
 then 
-	echo "usage: create_code_v3d_widget.sh <DialogTemplate> <OutputFile>"
-	echo ""
-	echo "============ EXAMPLE : WidgetTemplate  =============="
-	eval "$TEMPLATE_PATH/v3d_widget_template_display.sh"
+	echo "usage: create_code_qt_widget.sh <DialogTemplate> <OutputFile>"
+	echo "usage: create_code_qt_widget.sh ! ==> produce template file"
+	echo "usage: create_code_qt_widget.sh demo ==> produce runable project"
 	exit 1
 elif [ "$1" = "!" ]
 then
-	eval "$TEMPLATE_PATH/v3d_widget_template_create.sh"
+	eval "$TEMPLATE_PATH/qt_widget_template_create.sh"
+	exit 0
+elif [ "$1" = "demo" ]
+then
+	DEMO_PATH=`which getcode.sh`
+	DEMO_PATH="`dirname $DEMO_PATH`/demo"
+	eval "$DEMO_PATH/qt_widget_demo.sh"
 	exit 0
 fi
 
@@ -33,7 +38,6 @@ else
 fi
 echo ""
 echo "#include <QtGui>"
-echo "#include <v3d_interface.h>"
 echo ""
 
 while read line
@@ -64,14 +68,8 @@ do
 			echo -e "\tQ_OBJECT"
 			echo ""
 			echo "public:"
-			echo -e "\t$CLASS_NAME(V3DPluginCallback2 &callback, QWidget * parent) : QWidget(parent)"
+			echo -e "\t$CLASS_NAME(QWidget * parent) : QWidget(parent)"
 			echo -e "\t{"
-			echo -e "\t\tthis->callback = &callback;"
-			echo -e "\t\tcurwin = callback.currentImageWindow();"
-			echo ""
-			echo -e "\t\tv3dhandleList win_list = callback.getImageWindowList();"
-			echo -e "\t\tQStringList items;"
-			echo -e "\t\tfor(int i = 0; i < win_list.size(); i++) items << callback.getImageName(win_list[i]);"
 		else
 			echo -e "\t}"
 			echo ""
@@ -97,8 +95,6 @@ do
 			echo "public:"
 			echo -ne "$UPDATE_DEFS"
 			echo -ne "$DEFINITIONS"
-			echo -e "\tV3DPluginCallback2 * callback;"
-			echo -e "\tv3dhandle curwin;"
 			echo "};"
 			echo ""
 			echo ""
@@ -115,14 +111,8 @@ do
 			echo -e "\tQ_OBJECT"
 			echo ""
 			echo "public:"
-			echo -e "\t$CLASS_NAME(V3DPluginCallback2 &callback, QWidget * parent) : QWidget(parent)"
+			echo -e "\t$CLASS_NAME(QWidget * parent) : QWidget(parent)"
 			echo -e "\t{"
-			echo -e "\t\tthis->callback = &callback;"
-			echo -e "\t\tcurwin = callback.currentImageWindow();"
-			echo ""
-			echo -e "\t\tv3dhandleList win_list = callback.getImageWindowList();"
-			echo -e "\t\tQStringList items;"
-			echo -e "\t\tfor(int i = 0; i < win_list.size(); i++) items << callback.getImageName(win_list[i]);"
 		fi
 	elif [ "$TYPE" = "D" ]
 	then
@@ -187,9 +177,11 @@ do
 	then
 		STAT="C"
 		SIG_OBJ=`echo $line | awk '{print $2}'`
-		SIG_ACT=`echo $line | awk '{print $3}'`
-		SLT_OBJ=`echo $line | awk '{print $4}'`
-		SLT_ACT=`echo $line | awk '{print $5}'`
+		SIG_ACT=`echo $line | awk -F\( '{print $1}' | awk '{print $3}'`
+		SIG_ACT="${SIG_ACT}(`echo $line | awk -F\) '{print $1}' |awk -F\( '{print $2}'`)"
+		SLT_OBJ=`echo $line | awk -F\) '{print $2}' | awk '{print $1}'`
+		SLT_ACT=`echo $line | awk -F\) '{print $2}' | awk -F\( '{print $1}' | awk '{print $2}'`
+		SLT_ACT="${SLT_ACT}(`echo $line | awk -F\( '{print $3}' | awk -F\) '{print $1}'`)"
 		i=0
 		while [[ "$i" -lt "${#SLOT_FUNCS[@]}" && "${SLOT_FUNCS[$i]}" != "$SLT_ACT" ]]
 		do 
@@ -237,8 +229,6 @@ done
 echo "public:"
 echo -ne "$UPDATE_DEFS"
 echo -ne "$DEFINITIONS"
-echo -e "\tV3DPluginCallback2 * callback;"
-echo -e "\tv3dhandle curwin;"
 echo "};"
 echo ""
 echo "#endif"
