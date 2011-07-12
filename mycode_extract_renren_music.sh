@@ -8,7 +8,10 @@ echo "usage : ./extract_renren_music.sh <login_file>"
 echo "cat email=xxx&password=xxx > login_file"
 exit 0
 fi
+echo "Login renren successfully!"
+echo "get renren  musicbox ..."
 wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies -O musicbox -o log "http://music.renren.com/musicbox"
+echo "extract mp3 url ..."
 grep "*.mp3" musicbox
 mp3_src=`grep -o 'http:.*\.mp3' musicbox`
 if [ "$mp3_src" != "" ];
