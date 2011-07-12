@@ -15,7 +15,11 @@ then
 fi
 
 CODE_NAME=$1
-
+command="mycode_$CODE_NAME.sh "
 shift
-command="mycode_$CODE_NAME.sh $@"
+while [ "$#" != "0" ] 
+do
+	command="$command '$1'"
+	shift
+done
 eval "$command"

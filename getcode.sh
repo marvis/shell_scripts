@@ -11,7 +11,7 @@ then
 		echo "v3d_widget [vw]   #   produce v3d widget header invoked by v3d plugin from widget_template"
 		echo "qt_widget  [qw]   #   similar to v3d_widget but doesn't include v3d callback related code"
 		echo "opengl            #   produce opengl program framework"
-		echo "hellow_world      #   produce hello world code"
+		echo "hello_world      #   produce hello world code"
 		echo "detect_platform   #   a small program used to detect the bit of macos"
 		echo "split_string      #   split function used to convert 1d char pointer to 2d char pointer"
 		echo "getopt            #   produce getopt code from template"
@@ -27,7 +27,11 @@ then
 fi
 
 CODE_NAME=$1
-
+command="create_code_$CODE_NAME.sh "
 shift
-command="create_code_$CODE_NAME.sh $@"
+while [ "$#" != "0" ] 
+do
+	command="$command '$1'"
+	shift
+done
 eval "$command"
