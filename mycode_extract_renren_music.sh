@@ -13,7 +13,7 @@ grep "*.mp3" musicbox
 mp3_src=`grep -o 'http:.*\.mp3' musicbox`
 if [ "$mp3_src" != "" ];
 then
-wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies $mp3_src
+wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies -o log $mp3_src
 else
 echo "No music link is found!"
 fi
