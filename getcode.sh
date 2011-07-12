@@ -3,10 +3,9 @@ if [[ "$#" -eq "0" || "$1" = "!" ]]
 then
 	echo "usage : getcode.sh <code_name> [option]"
 	echo ""
-	echo "Available Codes : v3d_plugin v3d_dialog opengl hellow_world ..."
-	echo ""
-	echo "cpp source codes :"
+	echo "============== cpp source codes =============="
 	if [ "1" ]; then
+		echo "ncurses           #   ncurses demo on mouse event catch"
 		echo "v3d_plugin [vp]   #   produce v3d plugin project from plugin_template"
 		echo "v3d_dialog [vd]   #   produce v3d dialog header invoked by v3d plugin from dialog_template"
 		echo "v3d_widget [vw]   #   produce v3d widget header invoked by v3d plugin from widget_template"
@@ -18,7 +17,7 @@ then
 		echo "getopt            #   produce getopt code from template"
 	fi | column -t -s \#
 	echo ""
-	echo "shell scripts :"
+	echo "============== shell scripts =============="
 	if [ "1" ]; then
 		echo "dayofweek    #   get day of week"
 	fi | column -t -s \#
