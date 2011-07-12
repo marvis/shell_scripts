@@ -23,6 +23,7 @@ if [ "$3" = "" ]; then
 		echo "No music link is found!"
 	fi
 else
-	echo "specific music download is under construction!"
-	echo "try to get songId and download musicbox music.renren.com/musicbox?tab=1&autoPlay=true&songId=xxxxx"
+	#echo "specific music download is under construction!"
+	#echo "try to get songId and download musicbox music.renren.com/musicbox?tab=1&autoPlay=true&songId=xxxxx"
+	wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies "music.renren.com/musicbox?tab=1&autoPlay=true&songId=$3"
 fi
