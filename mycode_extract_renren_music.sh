@@ -1,6 +1,6 @@
 if [ "$#" = "0" ]; then
-	echo "Usage : ./extract_renren_music.sh <email> <password> [<music_id>]"
-	echo "        ./extract_renren_music.sh -f <login_file> [<music_id>]"
+	echo "Usage : ./extract_renren_music.sh <email> <password> [<music_id>] [<music_name>]"
+	echo "        ./extract_renren_music.sh -f <login_file> [<music_id>] [<music_name>]"
 	echo "        ./extract_renren_music.sh -h"
 	echo "        ./extract_renren_music.sh -a <music_name> <music_id>"
 	echo "        ./extract_renren_music.sh -d <music_id>"
@@ -69,7 +69,11 @@ echo "extract mp3 url ..."
 mp3_src=`grep -o 'http:.*\.mp3' musicbox`
 if [ "$mp3_src" != "" ];
 then
-	wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies $mp3_src
+	if [ "$4" = "" ]; then
+		wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies $mp3_src
+	else
+		wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies -O "$4" $mp3_src
+	fi
 else
 	echo "No music link is found!"
 fi
@@ -81,4 +85,8 @@ fi
 ## 梦中的婚礼           #  62442
 ## Canon In D           #  106399
 ## 贝多芬-月光奏鸣曲    #  61870
-## good #  33
+## Je M'appelle Helene #  377411
+## Une fille et un garon #  233857
+## Amour secret #  233858
+## Le secret d Emilou Haley #  233856
+## Le train du soir #  233855
