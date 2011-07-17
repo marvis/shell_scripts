@@ -78,6 +78,11 @@ else
 	echo "No music link is found!"
 fi
 
+rm cookies.txt
+rm home
+rm log
+rm musicbox
+
 ## Tears                #  107908
 ## 假如爱有天意         #  107651
 ## The Mass             #  107524
@@ -90,3 +95,34 @@ fi
 ## Amour secret #  233858
 ## Le secret d Emilou Haley #  233856
 ## Le train du soir #  233855
+## eversleeping # 150370
+## are you the one # 432976
+## this love # 179800
+## angel # 249600
+## when you believe # 133413
+## till the world ends # 254573
+## walk on # 193469
+## call you tonight # 133454
+## i will always love you # 133357
+## i have nothing # 133398
+## i look to you # 133423
+## run to you # 133390
+## High Maintenance # 255275
+## i can # 254570
+## Stones Inside Your Shoes # 299189
+## Ooh La La # 239347
+## wish you were here # 244661
+## leikka # 253676
+## your biggest mistake # 245356
+## 美人鱼 #  240123
+## eyes on me # 296934
+## time after time # 291441
+## everything in the world # 400104
+## songs about you # 239971
+## fifteen #  163505
+
+## Je M'appelle Helene #  377411
+## Une fille et un garon # 233857
+## Amour secret # 233858
+## Le secret d Emilou Haley # 233856
+## Le train du soir # 233855 
