@@ -9,6 +9,7 @@ then
 		echo "v3d_plugin [vp]   #   produce v3d plugin project from plugin_template"
 		echo "v3d_dialog [vd]   #   produce v3d dialog header invoked by v3d plugin from dialog_template"
 		echo "v3d_widget [vw]   #   produce v3d widget header invoked by v3d plugin from widget_template"
+		echo "v3d_imgio         #   produce code on how to invoke v3d loadImage/saveImage and the Makefile"
 		echo "qt_widget  [qw]   #   similar to v3d_widget but doesn't include v3d callback related code"
 		echo "opengl            #   produce opengl program framework"
 		echo "hello_world      #   produce hello world code"

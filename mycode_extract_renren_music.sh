@@ -70,7 +70,7 @@ mp3_src=`grep -o 'http:.*\.mp3' musicbox`
 if [ "$mp3_src" != "" ];
 then
 	if [ "$4" = "" ]; then
-		wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies $mp3_src
+		wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies -O renren.mp3 $mp3_src
 	else
 		wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies -O "$4" $mp3_src
 	fi
@@ -126,3 +126,4 @@ rm musicbox
 ## Amour secret # 233858
 ## Le secret d Emilou Haley # 233856
 ## Le train du soir # 233855 
+## 只凝视着你-灌篮高手#  241617
