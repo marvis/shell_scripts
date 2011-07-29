@@ -13,6 +13,7 @@ then
 		echo "qt_widget  [qw]   #   similar to v3d_widget but doesn't include v3d callback related code"
 		echo "opengl            #   produce opengl program framework"
 		echo "hello_world      #   produce hello world code"
+		echo "cpp_limit        #   the max value of double in cpp"
 		echo "detect_platform   #   a small program used to detect the bit of macos"
 		echo "split_string      #   split function used to convert 1d char pointer to 2d char pointer"
 		echo "getopt            #   produce getopt code from template"
